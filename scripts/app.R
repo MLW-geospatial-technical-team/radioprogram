@@ -14,32 +14,32 @@ ui <- dashboardPage(
       menuItem("About", tabName = "about")
     )
   ),
+  
   dashboardBody(
-    tags$style(HTML("#map {height: calc(100vh - 80px) !important;}")),
-    leafletOutput("map")
-  ),
-  tabItems(
-    # Home tab
-    tabItem(tabName = "home",
-            fluidPage(
-              titlePanel("Home"),
-              leafletOutput("map")
-            )
-    ),
-    
-    # Summaries tab
-    tabItem(tabName = "summaries",
-            h2("Summaries Content")
-    ),
-    
-    # Feedback tab
-    tabItem(tabName = "feedback",
-            h2("Feedback Content")
-    ),
-    
-    # About tab
-    tabItem(tabName = "about",
-            h2("About Content")
+    tabItems(
+      # Home tab
+      tabItem(tabName = "home",
+              fluidPage(
+                titlePanel("Phone calls from districts across Malawi"),
+                tags$style(HTML("#map {height: calc(100vh - 80px) !important;}")),
+                leafletOutput("map")
+              )
+      ),
+      
+      # Summaries tab
+      tabItem(tabName = "summaries",
+              titlePanel("Phone calls from districts across Malawi")
+      ),
+      
+      # Feedback tab
+      tabItem(tabName = "feedback",
+              h2("Feedback Content")
+      ),
+      
+      # About tab
+      tabItem(tabName = "about",
+              h2("About Content")
+      )
     )
   )
 )
@@ -47,8 +47,8 @@ ui <- dashboardPage(
 # Define server logic
 server <- function(input, output) {
   
-  shapefile_path <- "/Users/patrickkalonde/Desktop/MLW-GeoTeam/Support/ScienceComm/MoyoNkukambilana/basedata/malawi_level2/mwi_admbnda_adm2_nso_20181016.shp"
-  radio_path <- "/Users/patrickkalonde/Desktop/MLW-GeoTeam/Support/ScienceComm/MoyoNkukambilana/radiodata/summary.csv"
+  shapefile_path <- "../basedata/malawi_level2/mwi_admbnda_adm2_nso_20181016.shp"
+  radio_path <- "../radiodata/summary.csv"
   # Notes for Clinton, Modify the two lines above. On my macbook relative path was not working so I resorted to the old way of using absolute paths 
   malawi_shapefile <- sf::st_read(shapefile_path)
   radio_summary <- read.csv(radio_path)
@@ -71,6 +71,9 @@ server <- function(input, output) {
         weight = 1    
       )
   })
+  
+  #Add summaries
+  radio_program = read.csv('../radiodata/rawdata.csv')
 }
 
 # Run the application
