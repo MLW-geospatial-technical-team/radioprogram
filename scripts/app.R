@@ -5,11 +5,16 @@ library(shinydashboard)
 
 # UI
 ui <- dashboardPage(
-  dashboardHeader(title = "Moyo N'kukambilana"),
+  dashboardHeader(title = "Umoyo n'kukambirana"),
   dashboardSidebar(
     sidebarMenu(
       menuItem("Home", tabName = "home"),
-      menuItem("Summaries", tabName = "summaries"),
+      menuItem("Summaries", tabName = "summaries",
+               menuSubItem("Average Number of Calls", tabName = "avg_calls"),
+               menuSubItem("Frequent Callers", tabName = "freq_callers"),
+               menuSubItem("Gender", tabName = "gender"),
+               menuSubItem("Township with Most Calls", tabName = "township_calls")
+      ),
       menuItem("Feedback", tabName = "feedback"),
       menuItem("About", tabName = "about")
     )
@@ -27,8 +32,17 @@ ui <- dashboardPage(
       ),
       
       # Summaries tab
-      tabItem(tabName = "summaries",
-              titlePanel("Phone calls from districts across Malawi")
+      tabItem(tabName = "avg_calls",
+              titlePanel("Average Number of Calls Content")
+      ),
+      tabItem(tabName = "freq_callers",
+              titlePanel("Frequent Callers Content")
+      ),
+      tabItem(tabName = "gender",
+              titlePanel("Gender Content")
+      ),
+      tabItem(tabName = "township_calls",
+              titlePanel("Township with Most Calls Content")
       ),
       
       # Feedback tab
@@ -60,20 +74,28 @@ server <- function(input, output) {
   
   # Final map 
   output$map <- renderLeaflet({
+    pal <- colorNumeric("YlOrRd", domain = merged_data$Calls)
+    
     leaflet() %>%
       addTiles() %>%
       setView(lng = 35, lat = -13, zoom = 7) %>%
       addPolygons(
         data = merged_data,
         color = "black",       
-        fillColor = ~colorNumeric("YlOrRd", domain = NULL)(Calls),  
+        fillColor = ~pal(Calls),  
         fillOpacity = 0.7,      
         weight = 1    
-      )
+      ) 
   })
   
-  #Add summaries
+  # Add summaries
   radio_program = read.csv('../radiodata/rawdata.csv')
+  
+  # Add tab panels for summaries
+  output$avg_calls <- renderText("Average Number of Calls Content")
+  output$freq_callers <- renderText("Frequent Callers Content")
+  output$gender <- renderText("Gender Content")
+  output$township_calls <- renderText("Township with Most Calls Content")
 }
 
 # Run the application
