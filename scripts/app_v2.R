@@ -33,7 +33,10 @@ ui <- dashboardPage(
       
       # Summaries tab
       tabItem(tabName = "avg_calls",
-              titlePanel("Average Number of Calls Content")
+              titlePanel("Average Number of Calls"),
+              fluidRow(
+                dataTableOutput("avg_calls_table")
+              )
       ),
       tabItem(tabName = "freq_callers",
               titlePanel("Frequent Callers Content")
@@ -57,49 +60,6 @@ ui <- dashboardPage(
     )
   )
 )
-
-# # Define server logic
-# server <- function(input, output) {
-#   
-#   shapefile_path <- "C:/R/Umoyo N'kukambirana/radioprogram/basedata/malawi_level2/mwi_admbnda_adm2_nso_20181016.shp"
-#   radio_path <- "../radiodata/summary.csv"
-#   # Notes for Clinton, Modify the two lines above. On my macbook relative path was not working so I resorted to the old way of using absolute paths 
-#   malawi_shapefile <- sf::st_read(shapefile_path)
-#   radio_summary <- read.csv(radio_path)
-#   
-#   # Merge data based on common column "ADMN2_EN" and "Districts"
-#   merged_data <- merge(malawi_shapefile, radio_summary, by.x = "ADM2_EN", by.y = "District", all.x = TRUE)
-#   
-#   merged_data$Calls[is.na(merged_data$Calls)] <- 0
-#   
-#   # Final map 
-#   output$map <- renderLeaflet({
-#     pal <- colorNumeric("YlOrRd", domain = merged_data$Calls)
-#     
-#     leaflet() %>%
-#       addTiles() %>%
-#       setView(lng = 35, lat = -13, zoom = 7) %>%
-#       addPolygons(
-#         data = merged_data,
-#         color = "black",       
-#         fillColor = ~pal(Calls),  
-#         fillOpacity = 0.7,      
-#         weight = 1    
-#       ) 
-#   })
-#   
-#   # Add summaries
-#   radio_program = read.csv('../radiodata/rawdata.csv')
-#   
-#   # Add tab panels for summaries
-#   output$avg_calls <- renderText("Average Number of Calls Content")
-#   output$freq_callers <- renderText("Frequent Callers Content")
-#   output$gender <- renderText("Gender Content")
-#   output$township_calls <- renderText("Township with Most Calls Content")
-# }
-# 
-# # Run the application
-# shinyApp(ui, server)
 
 # Define server logic
 server <- function(input, output) {
@@ -141,7 +101,7 @@ server <- function(input, output) {
   avg_calls_df <- data.frame(District = names(avg_calls), Average_Calls = avg_calls)
   
   # Add tab panels for summaries
-  output$avg_calls <- renderTable({
+  output$avg_calls_table <- renderDataTable({
     avg_calls_df
   })
   
