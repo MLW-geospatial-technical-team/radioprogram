@@ -100,7 +100,7 @@ server <- function(input, output) {
   avg_calls <- tapply(radio_summary$Calls, radio_summary$District, mean, na.rm = TRUE)
   
   # Create a dataframe with the average number of calls
-  avg_calls_df <- data.frame(District = names(avg_calls), Average_Calls = avg_calls)
+  avg_calls_df <- data.frame(District = names(avg_calls), "Average Calls" = avg_calls)
   
   # Render the average calls table
   output$avg_calls_table <- renderDataTable({
@@ -109,8 +109,8 @@ server <- function(input, output) {
   
   # Create a donut chart
   output$donut_chart <- renderPlotly({
-    plot_ly(avg_calls_df, labels = ~District, values = ~Average_Calls, type = 'pie', hole = 0.6) %>%
-      layout(title = "Average Calls Per District", legend = list(orientation = "h", x = 0, y = -0.2))
+    plot_ly(avg_calls_df, labels = ~District, values = ~`Average Calls`, type = 'pie', hole = 0.6) %>%
+      layout(title = "Average Calls Per District", legend = list(orientation = "h", x = 0, y = -0.2), height = 500)
   })
   
   output$freq_callers <- renderText("Frequent Callers Content")
@@ -120,5 +120,3 @@ server <- function(input, output) {
 
 # Run the application
 shinyApp(ui, server)
-
-
