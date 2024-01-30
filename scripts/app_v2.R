@@ -83,7 +83,7 @@ server <- function(input, output) {
     
     leaflet() %>%
       addProviderTiles("CartoDB.Positron") %>%
-      setView(lng = 35, lat = -13, zoom = 7) %>%
+      setView(lng = 35, lat = -13, zoom = 6) %>%
       addPolygons(
         data = merged_data,
         color = "black",       
@@ -113,8 +113,7 @@ server <- function(input, output) {
   # Create a donut chart
   output$donut_chart <- renderPlotly({
     plot_ly(avg_calls_df, labels = ~District, values = ~`Average Calls`, type = 'pie', hole = 0.6) %>%
-      layout(title =  list(text = "Calls Per District",
-                           y = 0.95),  # Adjust this value to lower or raise the title
+      layout(title =  "Calls per District",
              legend = list(orientation = "h", x = 0, y = -0.2), 
              height = 500)
   })
