@@ -2,6 +2,7 @@
 library(shiny)
 library(leaflet)
 library(shinydashboard)
+library(plotly)
 
 # UI
 ui <- dashboardPage(
@@ -35,7 +36,8 @@ ui <- dashboardPage(
       tabItem(tabName = "avg_calls",
               titlePanel("Average Number of Calls"),
               fluidRow(
-                dataTableOutput("avg_calls_table")
+                column(6, dataTableOutput("avg_calls_table")),
+                column(6, plotlyOutput("donut_chart"))
               )
       ),
       tabItem(tabName = "freq_callers",
@@ -100,9 +102,15 @@ server <- function(input, output) {
   # Create a dataframe with the average number of calls
   avg_calls_df <- data.frame(District = names(avg_calls), Average_Calls = avg_calls)
   
-  # Add tab panels for summaries
+  # Render the average calls table
   output$avg_calls_table <- renderDataTable({
     avg_calls_df
+  })
+  
+  # Create a donut chart
+  output$donut_chart <- renderPlotly({
+    plot_ly(avg_calls_df, labels = ~District, values = ~Average_Calls, type = 'pie', hole = 0.6) %>%
+      layout(title = "Average Calls Per District", legend = list(orientation = "h", x = 0, y = -0.2))
   })
   
   output$freq_callers <- renderText("Frequent Callers Content")
@@ -112,4 +120,5 @@ server <- function(input, output) {
 
 # Run the application
 shinyApp(ui, server)
+
 
