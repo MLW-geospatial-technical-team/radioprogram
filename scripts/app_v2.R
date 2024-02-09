@@ -47,8 +47,7 @@ ui <- dashboardPage(
       tabItem(tabName = "gender",
               titlePanel("Gender Summary"),
               fluidRow(
-                column(6, dataTableOutput("gender_table")),
-                column(6, plotlyOutput("gender_pie"))
+                plotlyOutput("gender_bar")
               )
       ),
       tabItem(tabName = "township_calls",
@@ -67,6 +66,7 @@ ui <- dashboardPage(
     )
   )
 )
+
 
 # Define server logic
 server <- function(input, output) {
@@ -121,22 +121,28 @@ server <- function(input, output) {
   output$donut_chart <- renderPlotly({
     plot_ly(avg_calls_df, labels = ~District, values = ~`Average Calls`, type = 'pie', hole = 0.6) %>%
       layout(title =  "Calls per District",
-             legend = list(orientation = "h", x = 0, y = -0.2), 
-             height = 500)
+             legend = list(orientation = "h", x = 0, y = -0.2))
   })
   
   # Summarize gender by district
   gender_summary <- table(rawdata$District, rawdata$Gender)
   
-  # Create a pie chart summarizing gender by district
-  output$gender_pie <- renderPlotly({
-    plot_ly(labels = ~rownames(gender_summary), values = ~gender_summary[, "Male"], type = 'pie') %>%
-      layout(title = "Gender Distribution by District")
+  # Create a bar graph summarizing gender by district
+  output$gender_bar <- renderPlotly({
+    gender_df <- as.data.frame(gender_summary)
+    names(gender_df) <- c("District", "Gender", "Count")
+    
+    plot_ly(data = gender_df, x = ~District, y = ~Count, color = ~Gender, type = 'bar', width = 800, height = 600) %>%
+      layout(title = "Gender Distribution by District", barmode = "stack")
   })
   
   output$freq_callers <- renderText("Frequent Callers Content")
   output$township_calls <- renderText("Township with Most Calls Content")
 }
+
+# Run the application
+shinyApp(ui, server)
+
 
 # Run the application
 shinyApp(ui, server)
