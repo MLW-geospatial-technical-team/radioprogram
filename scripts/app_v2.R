@@ -126,19 +126,11 @@ server <- function(input, output) {
   })
   
   # Summarize gender by district
-  gender_summary <- aggregate(Gender ~ District, data = rawdata, FUN = function(x) {
-    gender_counts <- table(x)
-    return(gender_counts)
-  })
-  
-  # Render the table summarizing gender by district
-  output$gender_table <- renderDataTable({
-    gender_summary
-  })
+  gender_summary <- table(rawdata$District, rawdata$Gender)
   
   # Create a pie chart summarizing gender by district
   output$gender_pie <- renderPlotly({
-    plot_ly(gender_summary, labels = ~District, values = ~Gender$Male, type = 'pie') %>%
+    plot_ly(labels = ~rownames(gender_summary), values = ~gender_summary[, "Male"], type = 'pie') %>%
       layout(title = "Gender Distribution by District")
   })
   
