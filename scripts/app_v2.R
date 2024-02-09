@@ -1,3 +1,4 @@
+
 # Load the required libraries
 library(shiny)
 library(leaflet)
@@ -44,7 +45,11 @@ ui <- dashboardPage(
               titlePanel("Frequent Callers Content")
       ),
       tabItem(tabName = "gender",
-              titlePanel("Gender Content")
+              titlePanel("Gender Summary"),
+              fluidRow(
+                column(6, dataTableOutput("gender_table")),
+                column(6, plotlyOutput("gender_pie"))
+              )
       ),
       tabItem(tabName = "township_calls",
               titlePanel("Township with Most Calls Content")
@@ -120,8 +125,24 @@ server <- function(input, output) {
              height = 500)
   })
   
+  # Summarize gender by district
+  gender_summary <- aggregate(Gender ~ District, data = rawdata, FUN = function(x) {
+    gender_counts <- table(x)
+    return(gender_counts)
+  })
+  
+  # Render the table summarizing gender by district
+  output$gender_table <- renderDataTable({
+    gender_summary
+  })
+  
+  # Create a pie chart summarizing gender by district
+  output$gender_pie <- renderPlotly({
+    plot_ly(gender_summary, labels = ~District, values = ~Gender$Male, type = 'pie') %>%
+      layout(title = "Gender Distribution by District")
+  })
+  
   output$freq_callers <- renderText("Frequent Callers Content")
-  output$gender <- renderText("Gender Content")
   output$township_calls <- renderText("Township with Most Calls Content")
 }
 
