@@ -68,9 +68,11 @@ server <- function(input, output) {
   
   shapefile_path <- "C:/R/Umoyo N'kukambirana/radioprogram/basedata/malawi_level2/mwi_admbnda_adm2_nso_20181016.shp"
   radio_path <- "../radiodata/summary.csv"
+  rawdata_path <-  "../radiodata/rawdata.csv"
   # Notes for Clinton, Modify the two lines above. On my macbook relative path was not working so I resorted to the old way of using absolute paths 
   malawi_shapefile <- sf::st_read(shapefile_path)
   radio_summary <- read.csv(radio_path)
+  rawdata <- read.csv(rawdata_path)
   
   # Merge data based on common column "ADMN2_EN" and "Districts"
   merged_data <- merge(malawi_shapefile, radio_summary, by.x = "ADM2_EN", by.y = "District", all.x = TRUE)
