@@ -128,21 +128,27 @@ server <- function(input, output) {
   gender_summary <- table(rawdata$District, rawdata$Gender)
   
   # Create a bar graph summarizing gender by district
-  output$gender_bar <- renderPlotly({
+   output$gender_bar <- renderPlotly({
     gender_df <- as.data.frame(gender_summary)
     names(gender_df) <- c("District", "Gender", "Count")
     
-    plot_ly(data = gender_df, x = ~District, y = ~Count, color = ~Gender, type = 'bar', width = 800, height = 600) %>%
-      layout(title = "Gender Distribution by District", barmode = "stack")
+    plot_ly(data = gender_df, x = ~District, y = ~Count, color = ~Gender, type = 'bar',
+            marker = list(line = list(width = 6))) %>%
+      layout(title = "Gender Distribution by District") %>%
+      layout(margin = list(l = 200)) %>%
+      layout(barmode = "group") %>%
+      layout(xaxis = list(tickvals = seq(1, nrow(gender_df), by = 5), 
+                          ticktext = gender_df$District, 
+                          tickangle = -45))
   })
+  
+  
+  
+  
   
   output$freq_callers <- renderText("Frequent Callers Content")
   output$township_calls <- renderText("Township with Most Calls Content")
 }
-
-# Run the application
-shinyApp(ui, server)
-
 
 # Run the application
 shinyApp(ui, server)
