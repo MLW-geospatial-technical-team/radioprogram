@@ -73,6 +73,7 @@ server <- function(input, output) {
   
   shapefile_path <- "C:/R/Umoyo N'kukambirana/radioprogram/basedata/malawi_level2/mwi_admbnda_adm2_nso_20181016.shp"
   radio_path <- "../radiodata/summary.csv"
+  #radio_path <- "C:/R/Umoyo N'kukambirana/radioprogram/radiodata/summary.csv"
   rawdata_path <-  "../radiodata/rawdata.csv"
   # Notes for Clinton, Modify the two lines above. On my macbook relative path was not working so I resorted to the old way of using absolute paths 
   malawi_shapefile <- sf::st_read(shapefile_path)
@@ -97,7 +98,14 @@ server <- function(input, output) {
         fillColor = ~pal(Calls),  
         fillOpacity = 0.7,      
         weight = 1    
-      ) 
+      ) %>%
+      addLegend(
+        position = "bottomright",
+        pal = pal,
+        values = merged_data$Calls,
+        title = "Number of Calls"#,
+        #labFormat = labelFormat(suffix = " calls")
+      )
   })
   
   # Add summaries
