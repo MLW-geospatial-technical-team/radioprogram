@@ -11,24 +11,51 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem("Home", tabName = "home"),
-      menuItem("Summaries", tabName = "summaries",
-               menuSubItem("Average Number of Calls", tabName = "avg_calls"),
-               menuSubItem("Frequent Callers", tabName = "freq_callers"),
-               menuSubItem("Gender", tabName = "gender"),
-               menuSubItem("Township with Most Calls", tabName = "township_calls")
-      ),
-      menuItem("Feedback", tabName = "feedback"),
-      menuItem("About", tabName = "about")
+      menuItem("Average Number of Calls", tabName = "avg_calls", icon = icon("phone"), selected = TRUE),
+      menuItem("Frequent Callers", tabName = "freq_callers", icon = icon("user-friends")),
+      menuItem("Gender", tabName = "gender", icon = icon("venus-mars")),
+      menuItem("Township with Most Calls", tabName = "township_calls", icon = icon("map-marker-alt")),
+      menuItem("Feedback", tabName = "feedback", icon = icon("comments")),
+      menuItem("About", tabName = "about", icon = icon("info"))
+    ),
+    tags$style(
+      HTML(
+        "
+        .sidebar-menu .active > a {
+          background-color: #007bff !important;
+        }
+        .sidebar-menu .active > a:focus {
+          background-color: #007bff !important;
+        }
+        .sidebar-menu .active > a:hover {
+          background-color: #007bff !important;
+        }
+        "
+      )
     )
   ),
   
   dashboardBody(
+    tags$head(
+      tags$style(
+        HTML(
+          "
+          .content-wrapper, .right-side, .main-sidebar {
+            height: calc(100vh - 80px) !important;
+            overflow-y: auto;
+          }
+          .leaflet {
+            height: calc(110vh - 180px) !important;
+          }
+          "
+        )
+      )
+    ),
     tabItems(
       # Home tab
       tabItem(tabName = "home",
               fluidPage(
                 titlePanel("Phone calls from districts across Malawi"),
-                tags$style(HTML("#map {height: calc(100vh - 80px) !important;}")),
                 leafletOutput("map")
               )
       ),
@@ -66,6 +93,8 @@ ui <- dashboardPage(
     )
   )
 )
+
+
 
 
 # Define server logic
