@@ -112,7 +112,7 @@ server <- function(input, output) {
     
    # A qualitative color palette
    qual_palette <- c("#1f78b4", "#a6cee3", "#b2df8a","#33a02c", "#fb9a99",
-                     "#fdbf6f", "#cab2d6", "#ffff99", "#e31a1c", "#ff7f00",
+                     "#cab2d6", "#ffff99", "#fdbf6f","#e31a1c", "#ff7f00",
                      "#6a3d9a", "#b15928")
    
    # Create a color palette factor
