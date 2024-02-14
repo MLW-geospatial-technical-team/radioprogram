@@ -10,8 +10,8 @@ ui <- dashboardPage(
   dashboardHeader(title = "Umoyo n'kukambirana"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Home", tabName = "home"),
-      menuItem("Average Number of Calls", tabName = "avg_calls", icon = icon("phone"), selected = TRUE),
+      menuItem("Home", tabName = "home", selected = TRUE),
+      menuItem("Average Number of Calls", tabName = "avg_calls", icon = icon("phone")),
       menuItem("Frequent Callers", tabName = "freq_callers", icon = icon("user-friends")),
       menuItem("Gender", tabName = "gender", icon = icon("venus-mars")),
       menuItem("Township with Most Calls", tabName = "township_calls", icon = icon("map-marker-alt")),
@@ -93,7 +93,6 @@ ui <- dashboardPage(
     )
   )
 )
-
 
 
 
