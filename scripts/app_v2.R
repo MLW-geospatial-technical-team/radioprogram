@@ -106,62 +106,64 @@ server <- function(input, output) {
   output$map <- renderLeaflet({
     # Define color palette
     #pal <- colorNumeric("YlOrRd", domain = merged_data$Calls)
-    #pal <- colorNumeric("YlOrRd", domain = merged_data$Percentage_calls)
+    pal <- colorNumeric("YlOrRd", domain = merged_data$Percentage_calls)
     
-   pal <- colorFactor(palette = "YlOrRd", domain = merged_data$Percentage_category)
+   #pal <- colorFactor(palette = "YlOrRd", domain = merged_data$Percentage_category)
     
    # A qualitative color palette
-   qual_palette <- c("#1f78b4", "#a6cee3", "#b2df8a","#33a02c", "#fb9a99",
-                     "#cab2d6", "#ffff99", "#fdbf6f","#e31a1c", "#ff7f00",
-                     "#6a3d9a", "#b15928")
+   # qual_palette <- c("#1f78b4", "#a6cee3", "#b2df8a","#33a02c", "#fb9a99",
+   #                   "#cab2d6", "#ffff99", "#fdbf6f","#e31a1c", "#ff7f00",
+   #                   "#6a3d9a", "#b15928")
    
    # Create a color palette factor
-   qual_pal <- colorFactor(palette = qual_palette, domain = merged_data$Percentage_category)
-   
-    # leaflet() %>%
-    #   addProviderTiles("CartoDB.Positron") %>%
-    #   setView(lng = 35, lat = -13, zoom = 6) %>%
-    #   addPolygons(
-    #     data = merged_data,
-    #     color = "black",       
-    #     #fillColor = ~pal(Calls), 
-    #     #fillColor = ~pal(Percentage_calls),
-    #     fillColor = ~pal(Percentage_category),
-    #     fillOpacity = 0.7,      
-    #     weight = 1    
-    #   ) %>%
-    # addLegend(
-    #   position = "bottomright",
-    #   pal = pal,
-    #   #values = merged_data$Percentage_calls,
-    #   values = merged_data$Percentage_category,
-    #   title = "Percentage of Calls"
-    # )
-    #   # addLegend(
-    #   #   position = "bottomright",
-    #   #   pal = pal,
-    #   #   values = merged_data$Calls,
-    #   #   title = "Number of Calls"#,
-    #   #   #labFormat = labelFormat(suffix = " calls")
-    #   # )
-    
-    # Create the Leaflet map with qualitative color palette
+   #qual_pal <- colorFactor(palette = qual_palette, domain = merged_data$Percentage_category)
+
     leaflet() %>%
       addProviderTiles("CartoDB.Positron") %>%
       setView(lng = 35, lat = -13, zoom = 6) %>%
       addPolygons(
         data = merged_data,
-        color = "black",       
-        fillColor = ~qual_pal(Percentage_category),
-        fillOpacity = 0.7,      
-        weight = 1    
+        color = "black",
+        #fillColor = ~pal(Calls),
+        fillColor = ~pal(Percentage_calls),
+        #fillColor = ~pal(Percentage_category),
+        fillOpacity = 0.7,
+        weight = 1
       ) %>%
-      addLegend(
-        position = "bottomright",
-        pal = qual_pal,
-        values = merged_data$Percentage_category,
-        title = "Percentage of Calls"
-      )
+    addLegend(
+      position = "bottomright",
+      pal = pal,
+      values = merged_data$Percentage_calls,
+      #values = merged_data$Percentage_category,
+      title = "Percentage of Calls"
+    )
+      # addLegend(
+      #   position = "bottomright",
+      #   pal = pal,
+      #   values = merged_data$Calls,
+      #   title = "Number of Calls"#,
+      #   #labFormat = labelFormat(suffix = " calls")
+      # )
+    
+   #  # Create the Leaflet map with qualitative color palette
+   # leaflet() %>%
+   #   addProviderTiles("CartoDB.Positron") %>%
+   #   setView(lng = 35, lat = -13, zoom = 6) %>%
+   #   addPolygons(
+   #     data = merged_data,
+   #     color = "black",       
+   #     fillColor = ~qual_pal(Percentage_category),
+   #     fillOpacity = 0.7,      
+   #     weight = 1,
+   #     popup = paste("<b>District:</b>", merged_data$ADM2_EN, "<br>",
+   #                   "<b>Number of Calls:</b>", merged_data$Calls) 
+   #    ) %>%
+   #    addLegend(
+   #      position = "bottomright",
+   #      pal = qual_pal,
+   #      values = merged_data$Percentage_category,
+   #      title = "Percentage of Calls"
+   #    )
   })
   
   # Add summaries

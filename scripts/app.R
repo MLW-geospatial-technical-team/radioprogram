@@ -31,7 +31,7 @@ ui <- dashboardPage(
             overflow-y: auto;
           }
           .leaflet {
-            height: calc(100vh - 180px) !important;
+            height: calc(110vh - 180px) !important;
           }
           "
         )
