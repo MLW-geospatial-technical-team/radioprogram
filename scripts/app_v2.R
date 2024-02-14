@@ -85,9 +85,31 @@ server <- function(input, output) {
   
   merged_data$Calls[is.na(merged_data$Calls)] <- 0
   
+  # Calculate the total number of calls
+  total_calls <- sum(merged_data$Calls)
+  
+  # Calculate the percentage of calls for each district
+  merged_data$Percentage_calls <- round((merged_data$Calls / total_calls) * 100)
+  
+  # View the result
+  # head(merged_data[, c("ADM2_EN", "Calls", "Percentage_calls")])
+  
+  # Define categories
+  merged_data$Percentage_category <- cut(merged_data$Percentage_calls,
+                                         breaks = c(-Inf, 0, 1, 5, 10, 15, 20, Inf),
+                                         labels = c("0%", "0%", "1-5%", "5-10%", "10-15%","15-20%", ">20%"))
+  
+  # Rename the category label for NA values to "0%"
+  merged_data$Percentage_category[is.na(merged_data$Percentage_category)] <- "0%"
+  
   # Final map 
   output$map <- renderLeaflet({
-    pal <- colorNumeric("YlOrRd", domain = merged_data$Calls)
+    # Define color palette
+    #pal <- colorNumeric("YlOrRd", domain = merged_data$Calls)
+    #pal <- colorNumeric("YlOrRd", domain = merged_data$Percentage_calls)
+    
+   pal <- colorFactor(palette = "YlOrRd", domain = merged_data$Percentage_category)
+    
     
     leaflet() %>%
       addProviderTiles("CartoDB.Positron") %>%
@@ -95,17 +117,26 @@ server <- function(input, output) {
       addPolygons(
         data = merged_data,
         color = "black",       
-        fillColor = ~pal(Calls),  
+        #fillColor = ~pal(Calls), 
+        #fillColor = ~pal(Percentage_calls),
+        fillColor = ~pal(Percentage_category),
         fillOpacity = 0.7,      
         weight = 1    
       ) %>%
-      addLegend(
-        position = "bottomright",
-        pal = pal,
-        values = merged_data$Calls,
-        title = "Number of Calls"#,
-        #labFormat = labelFormat(suffix = " calls")
-      )
+    addLegend(
+      position = "bottomright",
+      pal = pal,
+      #values = merged_data$Percentage_calls,
+      values = merged_data$Percentage_category,
+      title = "Percentage of Calls"
+    )
+      # addLegend(
+      #   position = "bottomright",
+      #   pal = pal,
+      #   values = merged_data$Calls,
+      #   title = "Number of Calls"#,
+      #   #labFormat = labelFormat(suffix = " calls")
+      # )
   })
   
   # Add summaries
